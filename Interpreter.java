@@ -317,9 +317,10 @@ class Interpreter implements Expr.Visitor<Object>,
           return (double)left + (double)right;
         } // [plus]
 
-        if (left instanceof String && right instanceof String) {
-          return (String)left + (String)right;
+        if (left instanceof String || right instanceof String) {
+          return stringify(left) + stringify(right);
         }
+
 
 /* Evaluating Expressions binary-plus < Evaluating Expressions string-wrong-type
         break;
@@ -333,6 +334,10 @@ class Interpreter implements Expr.Visitor<Object>,
 //> check-slash-operand
         checkNumberOperands(expr.operator, left, right);
 //< check-slash-operand
+        if ((double)right == 0.0){
+          throw new RuntimeError(expr.operator,
+            "Dividing By Zero");
+        }
         return (double)left / (double)right;
       case STAR:
 //> check-star-operand
